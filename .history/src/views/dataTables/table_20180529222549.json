@@ -1,0 +1,197 @@
+
+{
+    "took": 6,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": 255895,
+        "max_score": 0,
+        "hits": [
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "UpNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "上海市金山区山阳镇红旗东路17号"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "VpNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "上海市宝山区真大路445号-2"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "V5NPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "上海市青浦区华新镇华志路555号A区3幢113号"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "ZpNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "杭州市余杭区余杭街道小城之春花苑8-3室"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "bpNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "上海市闵行区虹梅路3338弄40号"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "cZNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "上海市宝山区顾太路98号-66"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "f5NPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "北京市海淀区魏公村2号首层底商6号商铺"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "hJNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "萧山区北干街道金城路333号城市生活广场三层3023区"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "npNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "北京市东城区兴化路甲8号锐思特酒店1层北面第1间"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "qJNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "广州市白云区京溪街梅岗路5号东兴新村115铺"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "spNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "武汉市硚口区团结佳兴园2栋1号"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "xZNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "广州市荔湾区荔湾北路永安围10号第12铺"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "zJNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "广州市南沙区大岗镇兴业路客家之21号（临时经营场所有效期至2019年4月19日）"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "85NPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "拱墅区方家花苑20幢20-14号一楼"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "-ZNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "浦东新区周浦镇瑞浦路77弄67号105室"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "_ZNPpWMBG2jPahmkqYo2",
+                "_score": 0,
+                "_source": {
+                    "address": "杭州经济技术开发区25号大街1102、1104号"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "B5NPpWMBG2jPahmkqYs2",
+                "_score": 0,
+                "_source": {
+                    "address": "萧山区城厢街道南门村营业房7号一楼"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "DZNPpWMBG2jPahmkqYs2",
+                "_score": 0,
+                "_source": {
+                    "address": "上海市静安区曹家渡街道万航渡路889号悦达889广场3层L3-04室"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "HpNPpWMBG2jPahmkqYs2",
+                "_score": 0,
+                "_source": {
+                    "address": "上海市奉贤区海湾镇海泉路555弄15号105室"
+                }
+            },
+            {
+                "_index": "shop",
+                "_type": "doc",
+                "_id": "MJNPpWMBG2jPahmkqYs2",
+                "_score": 0,
+                "_source": {
+                    "address": "北京供市朝阳区广渠路66号院甲12号1层105B"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,178 @@
+{
+  "respCode": null,
+  "respMsg": null,
+  "data": {
+    "productField": [
+      {
+        "column_name": "commentCount",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "currentPrice",
+        "colum_type": "Double"
+      },
+      {
+        "column_name": "goodCommentCount",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "goodCommentRate",
+        "colum_type": "Float"
+      },
+      {
+        "column_name": "isAvailable",
+        "colum_type": "Boolean"
+      },
+      {
+        "column_name": "monthSale",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "originalPrice",
+        "colum_type": "Double"
+      },
+      {
+        "column_name": "packingFee",
+        "colum_type": "Double"
+      },
+      {
+        "column_name": "productDesc",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "productName",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "productRawId",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "productScore",
+        "colum_type": "Float"
+      },
+      {
+        "column_name": "promotionStock",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "recentPopularity",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "recentRating",
+        "colum_type": "Float"
+      },
+      {
+        "column_name": "shopRawId",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "stock",
+        "colum_type": "Int"
+      }
+    ],
+    "shopField": [
+      {
+        "column_name": "address",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "city",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "commentCount",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "deliveryChargeMode",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "deliveryDesc",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "deliveryFee",
+        "colum_type": "Double"
+      },
+      {
+        "column_name": "deliveryLimitation",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "deliveryTime",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "deliveryType",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "goodCommentRate",
+        "colum_type": "Float"
+      },
+      {
+        "column_name": "isBrandShop",
+        "colum_type": "Boolean"
+      },
+      {
+        "column_name": "isNewShop",
+        "colum_type": "Boolean"
+      },
+      {
+        "column_name": "latitude",
+        "colum_type": "Double"
+      },
+      {
+        "column_name": "longitude",
+        "colum_type": "Double"
+      },
+      {
+        "column_name": "monthSale",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "phone",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "productScore",
+        "colum_type": "Float"
+      },
+      {
+        "column_name": "rateCount",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "salesVolume",
+        "colum_type": "Int"
+      },
+      {
+        "column_name": "serviceScore",
+        "colum_type": "Float"
+      },
+      {
+        "column_name": "shopNameDetail",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "shopRawId",
+        "colum_type": "String"
+      },
+      {
+        "column_name": "shopScore",
+        "colum_type": "Float"
+      },
+      {
+        "column_name": "startPrice",
+        "colum_type": "Double"
+      },
+      {
+        "column_name": "status",
+        "colum_type": "Int"
+      }
+    ]
+  }
+}
