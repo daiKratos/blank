@@ -150,12 +150,12 @@ export default {
     }
   },
   created() {
-    // axios.get('http://192.168.10.218:8080/poc_ylink/pro').then(res => {
-    //   this.tableData = res.data.data
-    // })
-    setTimeout(() => {
-      this.tableData = testData.data
-    }, 100)
+    axios.get('http://192.168.10.218:8080/poc_ylink/pro').then(res => {
+      this.tableData = res.data.data
+    })
+    // setTimeout(() => {
+    //   this.tableData = testData.data
+    // }, 100)
   }
 }
 </script>
