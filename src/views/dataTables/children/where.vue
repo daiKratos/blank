@@ -19,8 +19,19 @@
                     Option(v-for="(optionItem,itemIndex) in whereData[selectedName+'Field']", :value='`${selectedName}-${index}-${optionItem.column_name}-${optionItem.colum_type}`', :key="itemIndex") {{optionItem.column_name}}
                   Option(v-if="selectedTabName.length <= 1", v-for="(radioItem,radioIndex) in whereData", :value='`${index}-${radioItem.column_name}-${radioItem.colum_type}`', :key='radioIndex') {{radioItem.column_name}}
               Col(span='7', v-if="item.Remaining")
-                Select(v-model="item.queryCriteria", style='width:300px',  :disabled='selectField.length===0')
-                  Option(v-for="(query,index) in queryCriterias", :value="query.value", :key="index") {{ query.label }}
+                Select(v-model="item.queryCriteria", v-if="item.type==='String'", style='width:300px',  :disabled='selectField.length===0')
+                  Option(v-for="(query,index) in stringCriteria", :value="query.value", :key="index") {{ query.label }}
+                Select(v-model="item.queryCriteria", v-else-if="item.type==='Boolean'", style='width:300px',  :disabled='selectField.length===0')
+                  Option(v-for="(query,index) in boolCriteria", :value="query.value", :key="index") {{ query.label }}
+                Select(v-model="item.queryCriteria", v-else, style='width:300px',  :disabled='selectField.length===0')
+                  Option(v-for="(query,index) in defaultCriteria", :value="query.value", :key="index") {{ query.label }}
+                //- span(v-if="item.type==='String'") string
+                //- span(v-else-if="item.type==='Boolean'") boolean
+                //- span(v-else) default
+
+
+                //- Select(v-model="item.queryCriterias", style='width:300px',  :disabled='selectField.length===0')
+                  //- Option(v-for="(query,index) in item.queryCriterias", :value="query.value", :key="index") {{ query.label }}
               Col(span='7', v-if="item.Remaining && item.showValue")
                 Input(placeholder="请输入内容", v-model="item.value", @on-blur='handleValue(index)', :disabled='selectField.length===0')
               Col(span='2')
@@ -54,13 +65,14 @@ export default {
             value: '',
             Remaining: true,
             showValue: true,
-            type: ''
+            type: '',
+            queryCriterias: []
           }
         ]
       },
       productFields: [],
       shopFields: [],
-      queryCriterias: [],
+      // queryCriterias: [],
       stringCriteria: [
         {
           value: '=',
@@ -146,12 +158,13 @@ export default {
         value: '',
         Remaining: false,
         showValue: false,
-        type: ''
+        type: '',
+        queryCriterias: []
       })
     },
     handleCriterias(value) {
       const queryParam = value.split('-')
-      this.queryCriterias = []
+      // this.queryCriterias = []
       if (queryParam.length > 3) {
         this.focusItem = queryParam[1]
         this.confitions.items[this.focusItem].tabName = queryParam[0]
@@ -160,15 +173,15 @@ export default {
         this.confitions.items[this.focusItem].queryCriteria = ''
         this.confitions.items[this.focusItem].value = ''
         if (queryParam[3] === 'String') {
-          this.queryCriterias = this.stringCriteria
+          // this.confitions.items[this.focusItem].queryCriterias = this.stringCriteria
           this.confitions.items[this.focusItem].showValue = true
           this.confitions.items[this.focusItem].type = 'String'
         } else if (queryParam[3] === 'Boolean') {
-          this.queryCriterias = this.boolCriteria
+          // this.confitions.items[this.focusItem].queryCriterias = this.boolCriteria
           this.confitions.items[this.focusItem].showValue = false
-          this.confitions.items[this.focusItem].type = ''
+          this.confitions.items[this.focusItem].type = 'Boolean'
         } else {
-          this.queryCriterias = this.defaultCriteria
+          // this.confitions.items[this.focusItem].queryCriterias = this.defaultCriteria
           this.confitions.items[this.focusItem].showValue = true
           this.confitions.items[this.focusItem].type = ''
         }
@@ -179,15 +192,16 @@ export default {
         this.confitions.items[this.focusItem].queryCriteria = ''
         this.confitions.items[this.focusItem].value = ''
         if (queryParam[2] === 'String') {
-          this.queryCriterias = this.stringCriteria
+          // this.confitions.items[this.focusItem].queryCriterias = this.stringCriteria
+          // console.log(this.confitions.items[this.focusItem].queryCriterias)
           this.confitions.items[this.focusItem].showValue = true
           this.confitions.items[this.focusItem].type = 'String'
         } else if (queryParam[2] === 'Boolean') {
-          this.queryCriterias = this.boolCriteria
+          // this.confitions.items[this.focusItem].queryCriterias = this.boolCriteria
           this.confitions.items[this.focusItem].showValue = false
-          this.confitions.items[this.focusItem].type = ''
+          this.confitions.items[this.focusItem].type = 'Boolean'
         } else {
-          this.queryCriterias = this.defaultCriteria
+          // this.confitions.items[this.focusItem].queryCriterias = this.defaultCriteria
           this.confitions.items[this.focusItem].showValue = true
           this.confitions.items[this.focusItem].type = ''
         }

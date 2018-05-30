@@ -22,10 +22,13 @@ export default {
   name: 'tableView',
   props: {
     data: {
-      type: [Object, String]
+      type: [Object, String, Array]
     }
   },
   watch: {
+    data(val){
+      this.initialData = this.data
+    },
     field(val) {
       this.$emit('changeField', val)
     }
@@ -36,7 +39,7 @@ export default {
       fields: [],
       initialData: '',
       selectConditions: '',
-      tableName: [],
+      tableName: []
     }
   },
   methods: {
@@ -50,9 +53,6 @@ export default {
     handleOption() {
       if (this.field.length !== 0) this.selectConditions = this.field.join()
     }
-  },
-  mounted() {
-    this.initialData = this.data
   }
 }
 </script>
@@ -60,7 +60,7 @@ export default {
 <style lang="scss">
 .tableView {
   flex-grow: 1;
-  .ivu-icon-android-options{
+  .ivu-icon-android-options {
     margin-right: 5px;
   }
 }

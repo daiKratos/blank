@@ -5,8 +5,8 @@
         Icon(type="pinpoint")
         | 数据库查询语句
       .search-con
-        Input(placeholder="数据库查询语句", style="width: 300px")
-        Button(type="primary") 查询
+        Input(placeholder="数据库查询语句", v-model="searchStatements",style="width: 300px")
+        Button(type="primary", @click='handleSearch') 查询
     .body-con
       tableView(:data='tableData',ref='tabView', @changeTabData='changeTabData', @changeField='changeField')
       whereView(:whereData='whereData',:selectedTabName='selectedTabName', :selectField='selectField', ref='whereView')
@@ -20,7 +20,7 @@
       Table(:columns="(showColumns?columns:[])" :data="data")
       Page(:total="200", :page-size='20', @on-change='handlePage')
     Modal(title="查询语句", v-model="showQuery")
-      p {{queryStatements}}
+      p(style='word-break: break-all;') {{queryStatements}}
 </template>
 
 <script>
@@ -49,7 +49,9 @@ export default {
       data: [],
       queryStatements: '',
       showColumns: false,
-      btnDisable: false
+      btnDisable: false,
+      activePage: 0,
+      searchStatements: ''
     }
   },
   methods: {
@@ -76,12 +78,19 @@ export default {
     },
     handleDealwith(page = 0) {
       if (this.$refs.whereView.confitions.items[0].field !== '') {
+        console.log(this.$refs.whereView.confitions.items)
         const statementArr = this.$refs.whereView.confitions.items.map((item, index) => {
-          if (item.type === 'String' && !item.value.includes('(')) return `${item.field}${item.queryCriteria}'${item.value}'`
-          else if (item.type === 'String' && item.value.includes('(')) return `${item.field}${item.queryCriteria}${item.value}`
+          if (item.type === 'String' && !item.value.includes('(')) {
+            if (item.tabName === '') {
+              return `${item.field}${item.queryCriteria}'${item.value}'`
+            }else{
+              return `${item.tabName}.${item.field}${item.queryCriteria}'${item.value}'`
+            }
+          } else if (item.type === 'String' && item.value.includes('(')) return `${item.field}${item.queryCriteria}${item.value}`
           else if (item.tabName === '') return `${item.field}${item.queryCriteria}${item.value}`
           else return `${item.tabName}.${item.field}${item.queryCriteria}${item.value}`
         })
+        console.log(statementArr)
         this.whereConditions = statementArr.join(` ${this.$refs.whereView.character} `)
       }
       if (this.$refs.tabView.tableName.length === 2) {
@@ -92,6 +101,21 @@ export default {
         return `select ${this.$refs.tabView.selectConditions} from ${this.$refs.tabView.tableName[0]} where ${this.whereConditions} limit ${page},20`
       }
     },
+    handleSearch() {
+      if (this.searchStatements !== '') {
+        axios({
+          methods: 'get',
+          url: `http://192.168.10.24:9200/_sql?sql=${this.searchStatements}`
+        }).then(res => {
+          // 这个地方会出现问题，因为不知道具体的返回结构
+          this.data = res.data.hits.hits.map(item => {
+            return item._source
+          })
+        })
+      } else {
+        this.$Message.info('查询语句不能为空')
+      }
+    },
     handleStatement() {
       this.showQuery = true
       if (this.$refs.tabView.selectConditions !== '') {
@@ -100,12 +124,12 @@ export default {
         this.queryStatements = '请选择查询的表名、字段名、查询条件'
       }
     },
-    handleCommit(page = 0) {
+    handleCommit() {
       if (this.$refs.tabView.selectConditions !== '') {
         this.showColumns = true
         axios({
           methods: 'get',
-          url: `http://192.168.10.24:9200/_sql?sql=${this.handleDealwith(page)}`
+          url: `http://192.168.10.24:9200/_sql?sql=${this.handleDealwith(this.activePage)}`
         }).then(res => {
           // 这个地方会出现问题，因为不知道具体的返回结构
           this.data = res.data.hits.hits.map(item => {
@@ -121,14 +145,17 @@ export default {
       }
     },
     handlePage(page) {
-      this.handleCommit(page)
+      this.activePage = page
+      this.handleCommit()
     }
   },
   created() {
-    axios.get('http://192.168.10.218:8080/poc_ylink/pro').then(res => {
-      this.tableData = res.data.data
-    })
-    // this.tableData = testData.data
+    // axios.get('http://192.168.10.218:8080/poc_ylink/pro').then(res => {
+    //   this.tableData = res.data.data
+    // })
+    setTimeout(() => {
+      this.tableData = testData.data
+    }, 100)
   }
 }
 </script>
