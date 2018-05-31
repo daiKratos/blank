@@ -5,7 +5,7 @@
         Icon(type="pinpoint")
         | 数据库查询语句
       .search-con
-        Input(placeholder="数据库查询语句", v-model="searchStatements",style="width: 300px")
+        Input(placeholder="数据库查询语句", v-model="searchStatements",style="width: 90%")
         Button(type="primary", @click='handleSearch') 查询
     .body-con
       tableView(:data='tableData',ref='tabView', @changeTabData='changeTabData', @changeField='changeField')
@@ -80,14 +80,16 @@ export default {
     handleDealwith(page = 0) {
       if (this.$refs.whereView.confitions.items[0].field !== '') {
         const statementArr = this.$refs.whereView.confitions.items.map((item, index) => {
+          console.log(item)
           if (item.type === 'String' && !item.value.includes('(')) {
             if (item.tabName === '') {
               return `${item.field}${item.queryCriteria}'${item.value}'`
             } else {
               return `${item.tabName}.${item.field}${item.queryCriteria}'${item.value}'`
             }
-          } else if (item.type === 'String' && item.value.includes('(')) return `${item.field}${item.queryCriteria}${item.value}`
-          else if (item.tabName === '') {
+          } else if (item.type === 'String' && item.value.includes('(')) {
+            return `${item.tabName}.${item.field}${item.queryCriteria}${item.value}`
+          } else if (item.tabName === '') {
             return `${item.field}${item.queryCriteria}${item.value}`
           } else {
             return `${item.tabName}.${item.field}${item.queryCriteria}${item.value}`

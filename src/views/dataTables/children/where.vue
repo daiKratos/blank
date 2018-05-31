@@ -33,7 +33,7 @@
                 //- Select(v-model="item.queryCriterias", style='width:300px',  :disabled='selectField.length===0')
                   //- Option(v-for="(query,index) in item.queryCriterias", :value="query.value", :key="index") {{ query.label }}
               Col(span='7', v-if="item.Remaining && item.showValue")
-                Input(placeholder="请输入内容", v-model="item.value", @on-blur='handleValue(index)', :disabled='selectField.length===0')
+                Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur='handleValue(index)', :disabled='selectField.length===0')
               Col(span='2')
                 Icon(type='ios-trash-outline', @click='handleDelete(index)')
 </template>
@@ -63,6 +63,7 @@ export default {
             field: '',
             queryCriteria: '',
             value: '',
+            copyValue: '',
             Remaining: true,
             showValue: true,
             type: '',
@@ -156,6 +157,7 @@ export default {
         field: '',
         queryCriteria: '',
         value: '',
+        copyValue: '',
         Remaining: false,
         showValue: false,
         type: '',
@@ -172,6 +174,7 @@ export default {
         this.confitions.items[this.focusItem].Remaining = true
         this.confitions.items[this.focusItem].queryCriteria = ''
         this.confitions.items[this.focusItem].value = ''
+        this.confitions.items[this.focusItem].copyValue = ''
         if (queryParam[3] === 'String') {
           // this.confitions.items[this.focusItem].queryCriterias = this.stringCriteria
           this.confitions.items[this.focusItem].showValue = true
@@ -210,13 +213,15 @@ export default {
     handleValue(index) {
       const conditionsArr = [' not in ', ' in ']
       if (conditionsArr.includes(this.confitions.items[index].queryCriteria)) {
-        const containsValue = this.confitions.items[index].value.split(',')
-        var showValue = '('
+        const containsValue = this.confitions.items[index].copyValue.split(',')
+        let showValue = '('
         containsValue.forEach((item, index) => {
           if (index === containsValue.length - 1) showValue = showValue + `'${item}'`
           else showValue = showValue + `'${item}',`
         })
         this.confitions.items[index].value = showValue + ')'
+      }else{
+        this.confitions.items[index].value = this.confitions.items[index].copyValue
       }
     }
   }
