@@ -18,7 +18,7 @@
         Icon(type="ios-keypad")
         | 查询结果
       Table(:columns="(showColumns?columns:[])" :data="data")
-      Page(:total="200", :page-size='20', @on-change='handlePage')
+      Page(:total="200", :page-size='20', @on-change='handlePage', v-if="data.length!==0")
     Modal(title="查询语句", v-model="showQuery")
       p(style='word-break: break-all;') {{queryStatements}}
 </template>
@@ -46,6 +46,7 @@ export default {
       selectField: '',
 
       columns: [],
+      defaultColumns: [],
       data: [],
       queryStatements: '',
       showColumns: false,
@@ -57,7 +58,8 @@ export default {
   methods: {
     changeField(value) {
       this.selectField = value
-      this.columns = [
+
+      this.defaultColumns = [
         {
           type: 'index',
           width: 60,
@@ -80,7 +82,7 @@ export default {
       if (this.$refs.whereView.confitions.items[0].field !== '') {
         console.log(this.$refs.whereView.confitions.items)
         const statementArr = this.$refs.whereView.confitions.items.map((item, index) => {
-          if ((item.type === 'String' && !item.value.includes('(')) || item.type === 'Boolean') {
+          if (item.type === 'String' && !item.value.includes('(')) {
             if (item.tabName === '') {
               return `${item.field}${item.queryCriteria}'${item.value}'`
             } else {
@@ -103,9 +105,11 @@ export default {
     },
     handleSearch() {
       if (this.searchStatements !== '') {
+        this.columns = []
+        this.columns = this.defaultColumns
         axios({
           methods: 'get',
-          url: `http://192.168.10.24:9200/_sql?sql=${this.searchStatements}`
+          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements}`
         }).then(res => {
           // 这个地方会出现问题，因为不知道具体的返回结构
           this.data = res.data.hits.hits.map(item => {
@@ -126,6 +130,8 @@ export default {
     },
     handleCommit() {
       if (this.$refs.tabView.selectConditions !== '') {
+        this.columns = []
+        this.columns = this.defaultColumns
         this.showColumns = true
         axios({
           methods: 'get',
@@ -140,7 +146,7 @@ export default {
         //   return item._source
         // })
       } else {
-        this.showQuery = true
+        this.showQuery = false
         this.queryStatements = '请选择查询的表名、字段名、查询条件'
       }
     },

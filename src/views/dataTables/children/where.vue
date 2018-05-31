@@ -119,11 +119,11 @@ export default {
       ],
       boolCriteria: [
         {
-          value: '=true',
+          value: '="true"',
           label: '真'
         },
         {
-          value: '=false',
+          value: '="false"',
           label: '假'
         }
       ],
