@@ -88,7 +88,11 @@ export default {
               return `${item.tabName}.${item.field}${item.queryCriteria}'${item.value}'`
             }
           } else if (item.type === 'String' && item.value.includes('(')) {
-            return `${item.tabName}.${item.field}${item.queryCriteria}${item.value}`
+            if (item.tabName) {
+              return `${item.tabName}.${item.field}${item.queryCriteria}${item.value}`
+            } else {
+              return `${item.field}${item.queryCriteria}${item.value}`
+            }
           } else if (item.tabName === '') {
             return `${item.field}${item.queryCriteria}${item.value}`
           } else {
