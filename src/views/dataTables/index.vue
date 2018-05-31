@@ -17,7 +17,7 @@
       p(slot='title')
         Icon(type="ios-keypad")
         | 查询结果
-      Table(:columns="(showColumns?columns:[])" :data="data")
+      Table(:columns="(showColumns?columns:[])", :data="data")
       Page(:total="200", :page-size='20', @on-change='handlePage', v-if="data.length!==0")
     Modal(title="查询语句", v-model="showQuery")
       p(style='word-break: break-all;') {{queryStatements}}
@@ -44,7 +44,6 @@ export default {
       whereConditions: '',
       selectedTabName: [],
       selectField: '',
-
       columns: [],
       defaultColumns: [],
       data: [],
@@ -80,7 +79,6 @@ export default {
     },
     handleDealwith(page = 0) {
       if (this.$refs.whereView.confitions.items[0].field !== '') {
-        console.log(this.$refs.whereView.confitions.items)
         const statementArr = this.$refs.whereView.confitions.items.map((item, index) => {
           if (item.type === 'String' && !item.value.includes('(')) {
             if (item.tabName === '') {
@@ -92,7 +90,6 @@ export default {
           else if (item.tabName === '') return `${item.field}${item.queryCriteria}${item.value}`
           else return `${item.tabName}.${item.field}${item.queryCriteria}${item.value}`
         })
-        console.log(statementArr)
         this.whereConditions = statementArr.join(` ${this.$refs.whereView.character} `)
       }
       if (this.$refs.tabView.tableName.length === 2) {

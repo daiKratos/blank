@@ -20,11 +20,11 @@
                   Option(v-if="selectedTabName.length <= 1", v-for="(radioItem,radioIndex) in whereData", :value='`${index}-${radioItem.column_name}-${radioItem.colum_type}`', :key='radioIndex') {{radioItem.column_name}}
               Col(span='7', v-if="item.Remaining")
                 Select(v-model="item.queryCriteria", v-if="item.type==='String'", style='width:300px',  :disabled='selectField.length===0')
-                  Option(v-for="(query,index) in stringCriteria", :value="query.value", :key="index") {{ query.label }}
+                  Option(v-for="(query,index) in stringCriteria", :value="query.value", :key="query.label") {{ query.label }}
                 Select(v-model="item.queryCriteria", v-else-if="item.type==='Boolean'", style='width:300px',  :disabled='selectField.length===0')
-                  Option(v-for="(query,index) in boolCriteria", :value="query.value", :key="index") {{ query.label }}
+                  Option(v-for="(query,index) in boolCriteria", :value="query.value", :key="query.label") {{ query.label }}
                 Select(v-model="item.queryCriteria", v-else, style='width:300px',  :disabled='selectField.length===0')
-                  Option(v-for="(query,index) in defaultCriteria", :value="query.value", :key="index") {{ query.label }}
+                  Option(v-for="(query,index) in defaultCriteria", :value="query.value", :key="query.label") {{ query.label }}
                 //- span(v-if="item.type==='String'") string
                 //- span(v-else-if="item.type==='Boolean'") boolean
                 //- span(v-else) default
