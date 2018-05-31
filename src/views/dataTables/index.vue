@@ -80,10 +80,10 @@ export default {
       if (this.$refs.whereView.confitions.items[0].field !== '') {
         console.log(this.$refs.whereView.confitions.items)
         const statementArr = this.$refs.whereView.confitions.items.map((item, index) => {
-          if (item.type === 'String' && !item.value.includes('(')) {
+          if ((item.type === 'String' && !item.value.includes('(')) || item.type === 'Boolean') {
             if (item.tabName === '') {
               return `${item.field}${item.queryCriteria}'${item.value}'`
-            }else{
+            } else {
               return `${item.tabName}.${item.field}${item.queryCriteria}'${item.value}'`
             }
           } else if (item.type === 'String' && item.value.includes('(')) return `${item.field}${item.queryCriteria}${item.value}`
