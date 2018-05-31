@@ -66,7 +66,7 @@ export default {
           title: '序号'
         },
         ...value.map(item => {
-          return { title: item, key: item }
+          return { title: item, key: item, width: 150 }
         })
       ]
     },
@@ -87,8 +87,11 @@ export default {
               return `${item.tabName}.${item.field}${item.queryCriteria}'${item.value}'`
             }
           } else if (item.type === 'String' && item.value.includes('(')) return `${item.field}${item.queryCriteria}${item.value}`
-          else if (item.tabName === '') return `${item.field}${item.queryCriteria}${item.value}`
-          else return `${item.tabName}.${item.field}${item.queryCriteria}${item.value}`
+          else if (item.tabName === '') {
+            return `${item.field}${item.queryCriteria}${item.value}`
+          } else {
+            return `${item.tabName}.${item.field}${item.queryCriteria}${item.value}`
+          }
         })
         this.whereConditions = statementArr.join(` ${this.$refs.whereView.character} `)
       }
@@ -102,8 +105,7 @@ export default {
     },
     handleSearch() {
       if (this.searchStatements !== '') {
-        this.columns = []
-        this.columns = this.defaultColumns
+        this.showColumns = true
         axios({
           methods: 'get',
           url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements}`
@@ -112,6 +114,18 @@ export default {
           this.data = res.data.hits.hits.map(item => {
             return item._source
           })
+          let arr = [
+            {
+              type: 'index',
+              width: 60,
+              align: 'center',
+              title: '序号'
+            }
+          ]
+          for (let item in this.data[0]) {
+            arr.push({ title: item, key: item, width: 150 })
+          }
+          this.columns = arr
         })
       } else {
         this.$Message.info('查询语句不能为空')
