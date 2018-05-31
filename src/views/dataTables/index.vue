@@ -129,7 +129,7 @@ export default {
         this.showColumns = true
         axios({
           methods: 'get',
-          url: `http://192.168.10.24:9200/_sql?sql=${this.handleDealwith(this.activePage)}`
+          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.handleDealwith(this.activePage)}`
         }).then(res => {
           // 这个地方会出现问题，因为不知道具体的返回结构
           this.data = res.data.hits.hits.map(item => {
@@ -150,7 +150,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://192.168.10.218:8080/poc_ylink/pro').then(res => {
+    axios.get(`${process.env.defaultDateUrl}:${process.env.defaultPort}/poc_ylink/pro`).then(res => {
       this.tableData = res.data.data
     })
     // setTimeout(() => {
