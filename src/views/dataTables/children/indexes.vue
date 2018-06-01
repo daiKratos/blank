@@ -3,7 +3,7 @@
     Card
       p(slot='title')
         Icon(type="android-options")
-        | 数据表
+        | 索引
       .table-con
         CheckboxGroup(v-model="tableName", @on-change='handleFields')
           Checkbox(label='product')
@@ -15,6 +15,10 @@
           OptionGroup(label='shop', v-if="tableName.length===2")
             Option(v-for="(item,index) in fields.shopField", :value="`shop.${item.column_name}`", :key="index") {{ item.column_name }}
           Option(v-for="(item,index) in fields", :value="`${item.column_name}`", :key="index", v-else) {{ item.column_name }}
+    Button(type="primary", style="margin-top:10px;float:right;", @click="createIndexes") 创建索引
+
+    Modal(title="创建索引", v-model="showIndexes")
+      p(style='word-break: break-all;') 正在创建索引.....
 </template>
 
 <script>
@@ -28,13 +32,11 @@ export default {
   watch: {
     data(val) {
       this.initialData = this.data
-    },
-    field(val) {
-      this.$emit('changeField', val)
     }
   },
   data() {
     return {
+      showIndexes: false,
       field: [],
       fields: [],
       initialData: '',
@@ -48,10 +50,16 @@ export default {
       this.fields = []
       if (data.length === 1) this.fields = this.initialData[`${data[0]}Field`]
       else if (data.length === 2) this.fields = this.initialData
-      this.$emit('changeTabData', this.tableName)
     },
     handleOption() {
       if (this.field.length !== 0) this.selectConditions = this.field.join()
+    },
+    createIndexes() {
+      if (this.fields && this.selectConditions) {
+        this.showIndexes = true
+      } else {
+        this.$Message.error('请选择要创建的字段')
+      }
     }
   }
 }
@@ -59,7 +67,6 @@ export default {
 
 <style lang="scss">
 .tableView {
-  padding-left: 10px;
   flex-grow: 1;
   .ivu-icon-android-options {
     margin-right: 5px;

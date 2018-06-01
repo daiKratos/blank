@@ -8,6 +8,7 @@
         Input(placeholder="数据库查询语句", v-model="searchStatements",style="width: 90%")
         Button(type="primary", @click='handleSearch') 查询
     .body-con
+      indexes(:data='tableData',ref='indexesView')
       tableView(:data='tableData',ref='tabView', @changeTabData='changeTabData', @changeField='changeField')
       whereView(:whereData='whereData',:selectedTabName='selectedTabName', :selectField='selectField', ref='whereView')
     .btn-con
@@ -25,6 +26,7 @@
 
 <script>
 // @ is an alias to /src
+import indexes from './children/indexes'
 import tableView from './children/tableView'
 import whereView from './children/where'
 import testData from './test.json'
@@ -33,6 +35,7 @@ import axios from 'axios'
 export default {
   name: 'home',
   components: {
+    indexes,
     tableView,
     whereView
   },
