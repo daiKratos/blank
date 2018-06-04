@@ -2,20 +2,22 @@
   #app
     HeaderView
     router-view
+    FooterView
 </template>
 
 <script>
 import HeaderView from '@/components/header'
+import FooterView from '@/components/footer'
 export default {
   name: 'App',
-  components:{HeaderView}
+  components: { HeaderView, FooterView }
 }
 </script>
 
 <style lang='scss'>
-html,body{
+html,
+body {
   height: 100%;
-
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

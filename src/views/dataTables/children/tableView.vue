@@ -1,20 +1,16 @@
 <template lang="pug">
   section.tableView
-    Card
-      p(slot='title')
-        Icon(type="android-options")
-        | 数据表
-      .table-con
-        CheckboxGroup(v-model="tableName", @on-change='handleFields')
-          Checkbox(label='product')
-          Checkbox(label='shop')
-      .field-con
-        Select(v-model="field", multiple, style="width:300px", @on-change='handleOption', not-found-text='请选择查询字段')
-          OptionGroup(label='product', v-if="tableName.length===2")
-            Option(v-for="(item,index) in fields.productField", :value="`product.${item.column_name}`", :key="index") {{ item.column_name }}
-          OptionGroup(label='shop', v-if="tableName.length===2")
-            Option(v-for="(item,index) in fields.shopField", :value="`shop.${item.column_name}`", :key="index") {{ item.column_name }}
-          Option(v-for="(item,index) in fields", :value="`${item.column_name}`", :key="index", v-else) {{ item.column_name }}
+    .table-con
+      CheckboxGroup(v-model="tableName", @on-change='handleFields')
+        Checkbox(label='product')
+        Checkbox(label='shop')
+    .field-con
+      Select(v-model="field", multiple, @on-change='handleOption', not-found-text='请选择查询字段')
+        OptionGroup(label='product', v-if="tableName.length===2")
+          Option(v-for="(item,index) in fields.productField", :value="`product.${item.column_name}`", :key="index") {{ item.column_name }}
+        OptionGroup(label='shop', v-if="tableName.length===2")
+          Option(v-for="(item,index) in fields.shopField", :value="`shop.${item.column_name}`", :key="index") {{ item.column_name }}
+        Option(v-for="(item,index) in fields", :value="`${item.column_name}`", :key="index", v-else) {{ item.column_name }}
 </template>
 
 <script>
@@ -59,8 +55,8 @@ export default {
 
 <style lang="scss">
 .tableView {
-  padding-left: 10px;
-  flex-grow: 1;
+  display: inline-block;
+  width: 88%;
   .ivu-icon-android-options {
     margin-right: 5px;
   }
@@ -68,6 +64,11 @@ export default {
 .table {
   &-con {
     margin-bottom: 10px;
+  }
+}
+.field {
+  &-con {
+    width: 500px;
   }
 }
 </style>

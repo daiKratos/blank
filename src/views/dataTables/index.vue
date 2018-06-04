@@ -1,25 +1,54 @@
 <template lang="pug">
   .home-con
-    Card
-      p(slot='title')
-        Icon(type="pinpoint")
-        | 数据库查询语句
-      .search-con
-        Input(placeholder="数据库查询语句", v-model="searchStatements",style="width: 90%")
-        Button(type="primary", @click='handleSearch') 查询
-    .body-con
-      indexes(:data='tableData',ref='indexesView')
-      tableView(:data='tableData',ref='tabView', @changeTabData='changeTabData', @changeField='changeField')
-      whereView(:whereData='whereData',:selectedTabName='selectedTabName', :selectField='selectField', ref='whereView')
-    .btn-con
-      Button(type='primary', @click='handleStatement', :disabled='btnDisable') 查看
-      Button(type='info', @click='handleCommit', :disabled='btnDisable') 提交
-    Card.show-con
-      p(slot='title')
-        Icon(type="ios-keypad")
-        | 查询结果
-      Table(:columns="(showColumns?columns:[])", :data="data")
-      Page(:total="200", :page-size='20', @on-change='handlePage', v-if="data.length!==0")
+    .card
+      .sentence
+        h1 语句查询
+        .form
+          .select
+            p.titleName 数据库查询语句：
+            Input(type="textarea", placeholder="数据库查询语句", v-model="searchStatements")
+          .btn
+            Button(type="primary", @click='handleSearch') 查询
+      .condition
+        h1 条件查询
+        .form
+          .select
+            p.titleName 数据表：
+            tableView(:data='tableData',ref='tabView', @changeTabData='changeTabData', @changeField='changeField')
+          .select
+            p.titleName 查询条件：
+            whereView(:whereData='whereData',:selectedTabName='selectedTabName', :selectField='selectField', ref='whereView')
+          .btn
+            Button(type="ghost", @click='handleStatement', :disabled='btnDisable') 查看
+            Button(type='primary', @click='handleCommit', :disabled='btnDisable') 查询
+    .card
+      .result
+        h1 查询结果
+        .form
+          .select
+            Table(:columns="(showColumns?columns:[])", :data="data")
+            Page(:total="200", :page-size='20', @on-change='handlePage', v-if="data.length!==0")
+      //- Card
+      //-   p(slot='title')
+      //-     Icon(type="pinpoint")
+      //-     | 数据库查询语句
+      //-   .search-con
+      //-     Input(placeholder="数据库查询语句", v-model="searchStatements",style="width: 90%")
+      //-     Button(type="primary", @click='handleSearch') 查询
+      //- .body-con
+      //-   indexes(:data='tableData',ref='indexesView')
+      //-   tableView(:data='tableData',ref='tabView', @changeTabData='changeTabData', @changeField='changeField')
+      //-   whereView(:whereData='whereData',:selectedTabName='selectedTabName', :selectField='selectField', ref='whereView')
+      //- .btn-con
+      //-   Button(type='primary', @click='handleStatement', :disabled='btnDisable') 查看
+      //-   Button(type='info', @click='handleCommit', :disabled='btnDisable') 提交
+      //- Card.show-con
+      //-   p(slot='title')
+      //-     Icon(type="ios-keypad")
+      //-     | 查询结果
+      //-   Table(:columns="(showColumns?columns:[])", :data="data")
+      //-   Page(:total="200", :page-size='20', @on-change='handlePage', v-if="data.length!==0")
+
     Modal(title="查询语句", v-model="showQuery")
       p(style='word-break: break-all;') {{queryStatements}}
 </template>
@@ -189,7 +218,62 @@ export default {
 <style lang="scss">
 .home {
   &-con {
-    margin: 0 20px;
+    .card {
+      background: #fff;
+      padding: 40px 120px 24px;
+      margin-bottom: 24px;
+      h1 {
+        height: 44px;
+        line-height: 44px;
+        padding-left: 52px;
+        font-size: 14px;
+        color: #646464;
+      }
+      .form {
+        margin-left: 25px;
+        .select {
+          margin: 16px 0 24px;
+          p.titleName {
+            font-size: 14px;
+            text-align: right;
+            vertical-align: top;
+            display: inline-block;
+            width: 12%;
+          }
+        }
+        .btn {
+          margin-left: 12%;
+          .ivu-btn {
+            margin-right: 16px;
+          }
+        }
+      }
+      .sentence {
+        h1 {
+          background: url('../../assets/sentence.png') no-repeat left center;
+        }
+        .select {
+          height: 70px;
+        }
+        .ivu-input-wrapper {
+          width: 88%;
+          height: 100%;
+          textarea.ivu-input {
+            height: 100%;
+          }
+        }
+      }
+      .condition {
+        h1 {
+          background: url('../../assets/condition.png') no-repeat left center;
+        }
+      }
+      .result{
+        h1{
+          background: url('../../assets/result.png') no-repeat left center;
+        }
+      }
+    }
     .ivu-icon-pinpoint,
     .ivu-icon-ios-keypad {
       margin-right: 5px;
@@ -197,32 +281,6 @@ export default {
     .ivu-page {
       text-align: right;
       margin-top: 15px;
-    }
-  }
-}
-.search {
-  &-con {
-    background-color: #fff;
-    .ivu-btn {
-      margin-left: 10px;
-    }
-  }
-}
-.body {
-  &-con {
-    margin-top: 20px;
-    display: flex;
-  }
-}
-.show-con {
-  margin-top: 20px;
-}
-.btn-con {
-  text-align: right;
-  margin: 10px 0;
-  .ivu-btn {
-    &:first-child {
-      margin-right: 10px;
     }
   }
 }

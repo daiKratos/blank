@@ -1,41 +1,39 @@
 <template lang="pug">
   section.where
-    Card
-      p(slot='title')
-        Icon(type='android-remove')
-        | 查询条件
-      .action-con
-        ButtonGroup
-          Button(:type="hasType", @click='handleToggle') 并且
-          Button(:type="hasReverseType", @click='handleToggle') 或者
-        Button(type='primary', @click='handleAdd',style='marginLeft:10px') 添加新行
-      .conditions-con
-        Form(ref='confitions', :model='confitions')
-          FormItem(v-for="(item,index) in confitions.items", :key="index")
-            Row
-              Col(span='7')
-                Select(style="width:300px", @on-change='handleCriterias', :disabled='selectField.length===0')
-                  OptionGroup(v-if="selectedTabName.length > 1", v-for="(selectedName,nameIndex) in selectedTabName", :label='selectedName', :key='nameIndex')
-                    Option(v-for="(optionItem,itemIndex) in whereData[selectedName+'Field']", :value='`${selectedName}-${index}-${optionItem.column_name}-${optionItem.colum_type}`', :key="itemIndex") {{optionItem.column_name}}
-                  Option(v-if="selectedTabName.length <= 1", v-for="(radioItem,radioIndex) in whereData", :value='`${index}-${radioItem.column_name}-${radioItem.colum_type}`', :key='radioIndex') {{radioItem.column_name}}
-              Col(span='7', v-if="item.Remaining")
-                Select(v-model="item.queryCriteria", v-if="item.type==='String'", style='width:300px',  :disabled='selectField.length===0')
-                  Option(v-for="(query,index) in stringCriteria", :value="query.value", :key="query.label") {{ query.label }}
-                Select(v-model="item.queryCriteria", v-else-if="item.type==='Boolean'", style='width:300px',  :disabled='selectField.length===0')
-                  Option(v-for="(query,index) in boolCriteria", :value="query.value", :key="query.label") {{ query.label }}
-                Select(v-model="item.queryCriteria", v-else, style='width:300px',  :disabled='selectField.length===0')
-                  Option(v-for="(query,index) in defaultCriteria", :value="query.value", :key="query.label") {{ query.label }}
-                //- span(v-if="item.type==='String'") string
-                //- span(v-else-if="item.type==='Boolean'") boolean
-                //- span(v-else) default
+    .action-con
+      ButtonGroup
+        Button(:type="hasType", @click='handleToggle') 并且
+        Button(:type="hasReverseType", @click='handleToggle') 或者
+    .conditions-con
+      Form(ref='confitions', :model='confitions')
+        FormItem(v-for="(item,index) in confitions.items", :key="index")
+          Row
+            Col(span='6')
+              Select(@on-change='handleCriterias', :disabled='selectField.length===0')
+                OptionGroup(v-if="selectedTabName.length > 1", v-for="(selectedName,nameIndex) in selectedTabName", :label='selectedName', :key='nameIndex')
+                  Option(v-for="(optionItem,itemIndex) in whereData[selectedName+'Field']", :value='`${selectedName}-${index}-${optionItem.column_name}-${optionItem.colum_type}`', :key="itemIndex") {{optionItem.column_name}}
+                Option(v-if="selectedTabName.length <= 1", v-for="(radioItem,radioIndex) in whereData", :value='`${index}-${radioItem.column_name}-${radioItem.colum_type}`', :key='radioIndex') {{radioItem.column_name}}
+            Col(span='6', v-if="item.Remaining")
+              Select(v-model="item.queryCriteria", v-if="item.type==='String'", :disabled='selectField.length===0')
+                Option(v-for="(query,index) in stringCriteria", :value="query.value", :key="query.label") {{ query.label }}
+              Select(v-model="item.queryCriteria", v-else-if="item.type==='Boolean'", :disabled='selectField.length===0')
+                Option(v-for="(query,index) in boolCriteria", :value="query.value", :key="query.label") {{ query.label }}
+              Select(v-model="item.queryCriteria", v-else,   :disabled='selectField.length===0')
+                Option(v-for="(query,index) in defaultCriteria", :value="query.value", :key="query.label") {{ query.label }}
+              //- span(v-if="item.type==='String'") string
+              //- span(v-else-if="item.type==='Boolean'") boolean
+              //- span(v-else) default
 
 
-                //- Select(v-model="item.queryCriterias", style='width:300px',  :disabled='selectField.length===0')
-                  //- Option(v-for="(query,index) in item.queryCriterias", :value="query.value", :key="index") {{ query.label }}
-              Col(span='7', v-if="item.Remaining && item.showValue")
-                Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur='handleValue(index)', :disabled='selectField.length===0')
-              Col(span='2')
-                Icon(type='ios-trash-outline', @click='handleDelete(index)')
+              //- Select(v-model="item.queryCriterias",   :disabled='selectField.length===0')
+                //- Option(v-for="(query,index) in item.queryCriterias", :value="query.value", :key="index") {{ query.label }}
+            Col(span='6', v-if="item.Remaining && item.showValue")
+              Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur='handleValue(index)', :disabled='selectField.length===0')
+            Col(span='1', v-if="confitions.items.length > 1")
+              Icon(type='ios-trash-outline', @click='handleDelete(index)')
+      Row
+        Col(span='6')
+          Button(type='dashed', @click='handleAdd', icon="plus") 新增查询条件
 </template>
 
 <script>
@@ -220,7 +218,7 @@ export default {
           else showValue = showValue + `'${item}',`
         })
         this.confitions.items[index].value = showValue + ')'
-      }else{
+      } else {
         this.confitions.items[index].value = this.confitions.items[index].copyValue
       }
     }
@@ -230,22 +228,32 @@ export default {
 
 <style lang="scss">
 .where {
-  flex-grow: 20;
-  padding-left: 10px;
+  display: inline-block;
+  width: 88%;
   .ivu-form-item {
+    margin-bottom: 0;
+  }
+  .ivu-form-item-content{
     margin-bottom: 10px;
   }
-  .ivu-icon-android-remove {
-    margin-right: 5px;
-  }
-  .ivu-col-span-7 {
-    width: 30%;
+  .ivu-col-span-6 {
+    margin-right: 10px;
+    .ivu-btn {
+      margin-top: 20px;
+      width: 100%;
+    }
   }
   .ivu-icon-ios-trash-outline {
+    cursor: pointer;
     font-size: 20px;
     vertical-align: middle;
-    margin-left: 15px;
     color: red;
+  }
+  .ivu-btn-group {
+    width: 20%;
+    .ivu-btn {
+      margin: 0 !important;
+    }
   }
 }
 .action-con {
