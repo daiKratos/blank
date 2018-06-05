@@ -18,7 +18,7 @@
             Select(v-model="item.columnName", @on-change="columnNameChange")
               Option(v-for="(val,index) in fields", :key="index", :value="val.column_name")
           .split(v-if="item.show")
-            Select(v-model="item.columnType")
+            Select(v-model="item.columnType", placeholder="请选择类型")
               Option(value="text") text
               Option(value="keyword") keyword
           .split.min

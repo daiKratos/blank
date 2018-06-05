@@ -87,20 +87,22 @@ export default {
       let dataSource = this.$refs.indexView.dataSource
       let columns = this.$refs.indexView.columns
       let arr = JSON.parse(JSON.stringify(columns))
-      arr.forEach(e => {
-        delete e.show
-      })
       if (!indexName) {
         this.$Message.error('索引表名不能为空')
         return false
       } else if (!dataSource) {
         this.$Message.error('请选择数据源表')
         return false
+      } else if (arr.length < 1) {
+        this.$Message.error('请选择索引字段')
+        return false
       }
       for (let i = 0; i < arr.length; i++) {
-        if (!arr[i].columnName && !arr[i].columnType) {
+        if (!arr[i].columnName || !arr[i].columnType) {
           this.$Message.error('请选择索引字段')
           return false
+        } else {
+          delete arr[i].show
         }
       }
       let json = {
