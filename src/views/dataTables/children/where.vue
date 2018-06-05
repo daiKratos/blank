@@ -29,7 +29,7 @@
                 //- Option(v-for="(query,index) in item.queryCriterias", :value="query.value", :key="index") {{ query.label }}
             Col(span='6', v-if="item.Remaining && item.showValue")
               Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur='handleValue(index)', :disabled='selectField.length===0')
-            Col(span='1', v-if="confitions.items.length > 1")
+            Col(span='1')
               Icon(type='ios-trash-outline', @click='handleDelete(index)')
       Row
         Col(span='6')
@@ -242,12 +242,6 @@ export default {
       margin-top: 20px;
       width: 100%;
     }
-  }
-  .ivu-icon-ios-trash-outline {
-    cursor: pointer;
-    font-size: 20px;
-    vertical-align: middle;
-    color: red;
   }
   .ivu-btn-group {
     width: 20%;

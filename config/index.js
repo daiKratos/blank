@@ -29,13 +29,13 @@ module.exports = {
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
-    cacheBusting: true,
+    cacheBusting: false,
 
-    cssSourceMap: true
+    cssSourceMap: false
   },
 
   build: {
-    tabUrl: 'http://192.168.10.218',
+    tabUrl: 'http://192.168.10.223',
     tabPort: 8080,
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),

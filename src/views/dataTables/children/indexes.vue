@@ -1,80 +1,118 @@
 <template lang="pug">
-  section.tableView
-    Card
-      p(slot='title')
-        Icon(type="android-options")
-        | 索引
-      .table-con
-        CheckboxGroup(v-model="tableName", @on-change='handleFields')
-          Checkbox(label='product')
-          Checkbox(label='shop')
-      .field-con
-        Select(v-model="field", multiple, style="width:300px", @on-change='handleOption', not-found-text='请选择查询字段')
-          OptionGroup(label='product', v-if="tableName.length===2")
-            Option(v-for="(item,index) in fields.productField", :value="`product.${item.column_name}`", :key="index") {{ item.column_name }}
-          OptionGroup(label='shop', v-if="tableName.length===2")
-            Option(v-for="(item,index) in fields.shopField", :value="`shop.${item.column_name}`", :key="index") {{ item.column_name }}
-          Option(v-for="(item,index) in fields", :value="`${item.column_name}`", :key="index", v-else) {{ item.column_name }}
-    Button(type="primary", style="margin-top:10px;float:right;", @click="createIndexes") 创建索引
-
-    Modal(title="创建索引", v-model="showIndexes")
-      p(style='word-break: break-all;') 正在创建索引.....
+  .indexesView
+    section
+      p.titleName 索引表名：
+      .input 
+        Input(placeholder="索引表名", v-model="indexName")
+    section
+      p.titleName 数据源表：
+      .input
+        Select(v-model="dataSource", @on-change='handleFields')
+          Option(value="product") product
+          Option(value="shop") shop
+    .field
+      p.titleName 索引字段：
+      .input
+        .list(v-for="(item,index) in columns", :key="index")
+          .split
+            Select(v-model="item.columnName", @on-change="columnNameChange")
+              Option(v-for="(val,index) in fields", :key="index", :value="val.column_name")
+          .split(v-if="item.show")
+            Select(v-model="item.columnType")
+              Option(value="text") text
+              Option(value="keyword") keyword
+          .split.min
+            Icon(type='ios-trash-outline', @click='handleDelete(index)')
+        .btn
+          Button(type='dashed', @click='handleAdd', icon="plus") 新增索引字段
 </template>
 
 <script>
 export default {
-  name: 'tableView',
-  props: {
-    data: {
-      type: [Object, String, Array]
-    }
-  },
+  name: 'indexesView',
+  props: ['data'],
   watch: {
-    data(val) {
+    data() {
       this.initialData = this.data
+      this.handleAdd()
     }
   },
   data() {
     return {
-      showIndexes: false,
-      field: [],
+      initialData: [],
       fields: [],
-      initialData: '',
-      selectConditions: '',
-      tableName: []
+      indexName: '',
+      columns: [],
+      dataSource: ''
     }
   },
   methods: {
     handleFields(data) {
-      this.field = []
-      this.fields = []
-      if (data.length === 1) this.fields = this.initialData[`${data[0]}Field`]
-      else if (data.length === 2) this.fields = this.initialData
+      this.fields = this.initialData[`${data}Field`]
     },
-    handleOption() {
-      if (this.field.length !== 0) this.selectConditions = this.field.join()
+    columnNameChange(value) {
+      this.columns.forEach(c => {
+        this.fields.forEach(f => {
+          if (c.columnName === f.column_name) {
+            if (f.colum_type !== 'String') {
+              if (f.colum_type === 'Int') {
+                c.columnType = 'integer'
+              } else {
+                c.columnType = f.colum_type.toLowerCase()
+              }
+            } else {
+              c.show = true
+            }
+          }
+        })
+      })
     },
-    createIndexes() {
-      if (this.fields && this.selectConditions) {
-        this.showIndexes = true
-      } else {
-        this.$Message.error('请选择要创建的字段')
-      }
+    handleAdd() {
+      this.columns.push({
+        columnName: '',
+        columnType: '',
+        show: false
+      })
+    },
+    handleDelete(index) {
+      this.columns.splice(index, 1)
     }
   }
 }
 </script>
 
-<style lang="scss">
-.tableView {
-  flex-grow: 1;
-  .ivu-icon-android-options {
-    margin-right: 5px;
+<style lang="scss" scoped>
+section {
+  margin-bottom: 10px;
+  &:last-child {
+    margin: 0;
+  }
+  .titleName {
+    vertical-align: middle !important;
   }
 }
-.table {
-  &-con {
+.input {
+  display: inline-block;
+  width: 40%;
+  .list {
     margin-bottom: 10px;
+    .split {
+      width: 44%;
+      display: inline-block;
+      margin-right: 2%;
+      &.min {
+        width: 6%;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+.btn {
+  margin: 0 !important;
+  .ivu-btn-dashed {
+    width: 48%;
   }
 }
 </style>
