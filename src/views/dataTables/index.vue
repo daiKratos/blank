@@ -35,7 +35,7 @@
         .form
           .select
             Table(:columns="(showColumns?columns:[])", :data="data")
-            Page(:total="200", :page-size='20', @on-change='handlePage', v-if="data.length!==0")
+            Page(:total="pageTotal", :page-size='20', @on-change='handlePage', v-if="data.length!==0" ,show-total)
 
     Modal(title="查询语句", v-model="showQuery")
       p(style='word-break: break-all;') {{queryStatements}}
@@ -71,6 +71,7 @@ export default {
       selectedTabName: [],
       selectField: '',
       columns: [],
+      pageTotal: 0,
       defaultColumns: [],
       data: [],
       queryStatements: '',
@@ -187,27 +188,38 @@ export default {
     handleSearch() {
       if (this.searchStatements !== '') {
         this.showColumns = true
+        if (this.searchStatements.indexOf('limit') === -1) {
+          let regVal = /\slimit\s(\d+),(\d+)/
+          if (!regVal.test(this.searchStatements)) {
+            this.searchStatements = `${this.searchStatements} limit 0,20`
+          }
+        }
         axios({
           methods: 'get',
           url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements}`
-        }).then(res => {
-          // 这个地方会出现问题，因为不知道具体的返回结构
-          this.data = res.data.hits.hits.map(item => {
-            return item._source
-          })
-          let arr = [
-            {
-              type: 'index',
-              width: 60,
-              align: 'center',
-              title: '序号'
-            }
-          ]
-          for (let item in this.data[0]) {
-            arr.push({ title: item, key: item, width: 150 })
-          }
-          this.columns = arr
         })
+          .then(res => {
+            // 这个地方会出现问题，因为不知道具体的返回结构
+            this.data = res.data.hits.hits.map(item => {
+              return item._source
+            })
+            let arr = [
+              {
+                type: 'index',
+                width: 60,
+                align: 'center',
+                title: '序号'
+              }
+            ]
+            for (let item in this.data[0]) {
+              arr.push({ title: item, key: item, width: 150 })
+            }
+            this.columns = arr
+            this.pageTotal = res.data.hits.total
+          })
+          .catch(err => {
+            this.$Message.error('查询语句错误')
+          })
       } else {
         this.$Message.info('查询语句不能为空')
       }
@@ -233,6 +245,7 @@ export default {
           this.data = res.data.hits.hits.map(item => {
             return item._source
           })
+          this.pageTotal = res.data.hits.total
         })
         // this.data = tabComData.data.hits.hits.map(item => {
         //   return item._source
