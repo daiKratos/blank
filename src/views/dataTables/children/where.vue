@@ -4,7 +4,7 @@
       ButtonGroup
         Button(:type="hasType", @click='handleToggle') 并且
         Button(:type="hasReverseType", @click='handleToggle') 或者
-    .conditions-con
+    .conditions-con(@click.stop="")
       Form(ref='confitions', :model='confitions')
         FormItem(v-for="(item,index) in confitions.items", :key="index")
           Row
@@ -28,7 +28,7 @@
               //- Select(v-model="item.queryCriterias",   :disabled='selectField.length===0')
                 //- Option(v-for="(query,index) in item.queryCriterias", :value="query.value", :key="index") {{ query.label }}
             Col(span='6', v-if="item.Remaining && item.showValue")
-              Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur='handleValue(index)', @on-focus="handleFocus(index)" :disabled='selectField.length===0')
+              Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur.stop='handleValue(index)', @on-focus.stop="handleFocus(index)" :disabled='selectField.length===0')
               .cityModelShow(v-if="cityModelShow")
                 .item(v-for="item in cityLists", :key="item.id", @click="cityModelClick(index,item.name)") {{item.name}}
             Col(span='1')
@@ -147,6 +147,14 @@ export default {
     hasReverseType() {
       return !this.showType ? 'primary' : 'ghost'
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      let _this = this
+      document.addEventListener('click', e => {
+        _this.cityModelShow = false
+      })
+    })
   },
   methods: {
     handleDelete(index) {
