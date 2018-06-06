@@ -28,7 +28,9 @@
               //- Select(v-model="item.queryCriterias",   :disabled='selectField.length===0')
                 //- Option(v-for="(query,index) in item.queryCriterias", :value="query.value", :key="index") {{ query.label }}
             Col(span='6', v-if="item.Remaining && item.showValue")
-              Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur='handleValue(index)', :disabled='selectField.length===0')
+              Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur='handleValue(index)', @on-focus="handleFocus(index)" :disabled='selectField.length===0')
+              .cityModelShow(v-if="cityModelShow")
+                .item(v-for="item in cityLists", :key="item.id", @click="cityModelClick(index,item.name)") {{item.name}}
             Col(span='1')
               Icon(type='ios-trash-outline', @click='handleDelete(index)')
       Row
@@ -54,6 +56,15 @@ export default {
     return {
       showType: true,
       character: 'and',
+      cityModelShow: false,
+      cityLists: [
+        { id: 0, name: '广东省深圳市' },
+        { id: 1, name: '上海市' },
+        { id: 2, name: '浙江省杭州市' },
+        { id: 3, name: '北京市' },
+        { id: 4, name: '湖北省武汉市' },
+        { id: 5, name: '广东省广州市' }
+      ],
       confitions: {
         items: [
           {
@@ -165,14 +176,14 @@ export default {
     handleCriterias(value) {
       const queryParam = value.split('-')
       // this.queryCriterias = []
+      this.confitions.items[this.focusItem].queryCriteria = ''
+      this.confitions.items[this.focusItem].value = ''
+      this.confitions.items[this.focusItem].copyValue = ''
       if (queryParam.length > 3) {
         this.focusItem = queryParam[1]
         this.confitions.items[this.focusItem].tabName = queryParam[0]
         this.confitions.items[this.focusItem].field = queryParam[2]
         this.confitions.items[this.focusItem].Remaining = true
-        this.confitions.items[this.focusItem].queryCriteria = ''
-        this.confitions.items[this.focusItem].value = ''
-        this.confitions.items[this.focusItem].copyValue = ''
         if (queryParam[3] === 'String') {
           // this.confitions.items[this.focusItem].queryCriterias = this.stringCriteria
           this.confitions.items[this.focusItem].showValue = true
@@ -190,8 +201,6 @@ export default {
         this.focusItem = queryParam[0]
         this.confitions.items[this.focusItem].field = queryParam[1]
         this.confitions.items[this.focusItem].Remaining = true
-        this.confitions.items[this.focusItem].queryCriteria = ''
-        this.confitions.items[this.focusItem].value = ''
         if (queryParam[2] === 'String') {
           // this.confitions.items[this.focusItem].queryCriterias = this.stringCriteria
           // console.log(this.confitions.items[this.focusItem].queryCriterias)
@@ -221,6 +230,17 @@ export default {
       } else {
         this.confitions.items[index].value = this.confitions.items[index].copyValue
       }
+    },
+    handleFocus(index) {
+      let field = this.confitions.items[index].field
+      if (field === 'city') {
+        this.cityModelShow = true
+      }
+    },
+    cityModelClick(index, name) {
+      this.confitions.items[index].copyValue = name
+      this.confitions.items[index].value = name
+      this.cityModelShow = false
     }
   }
 }
@@ -233,11 +253,12 @@ export default {
   .ivu-form-item {
     margin-bottom: 0;
   }
-  .ivu-form-item-content{
+  .ivu-form-item-content {
     margin-bottom: 10px;
   }
   .ivu-col-span-6 {
     margin-right: 10px;
+    position: relative;
     .ivu-btn {
       margin-top: 20px;
       width: 100%;
@@ -247,6 +268,24 @@ export default {
     width: 20%;
     .ivu-btn {
       margin: 0 !important;
+    }
+  }
+  .cityModelShow {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    z-index: 333;
+    width: 100%;
+    background-color: #fff;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    .item {
+      cursor: pointer;
+      padding: 0 10px;
+      &:hover {
+        background: #f3f3f3;
+      }
     }
   }
 }
