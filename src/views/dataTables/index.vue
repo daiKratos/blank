@@ -188,15 +188,15 @@ export default {
     handleSearch() {
       if (this.searchStatements !== '') {
         this.showColumns = true
-        if (this.searchStatements.indexOf('limit') === -1) {
-          let regVal = /\slimit\s(\d+),(\d+)/
-          if (!regVal.test(this.searchStatements)) {
-            this.searchStatements = `${this.searchStatements} limit 0,20`
-          }
-        }
+        // if (this.searchStatements.indexOf('limit') === -1) {
+        //   let regVal = /\slimit\s(\d+),(\d+)/
+        //   if (!regVal.test(this.searchStatements)) {
+        //     this.searchStatements = `${this.searchStatements} limit 0,20`
+        //   }
+        // }
         axios({
           methods: 'get',
-          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements}`
+          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements.replace(/(%25|%)/g,'%25')}`
         })
           .then(res => {
             // 这个地方会出现问题，因为不知道具体的返回结构
