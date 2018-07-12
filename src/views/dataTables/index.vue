@@ -83,6 +83,22 @@ export default {
     }
   },
   methods: {
+    loadingShow() {
+      this.$Spin.show({
+        render: h => {
+          return h('div', [
+            h('Icon', {
+              class: 'demo-spin-icon-load',
+              props: {
+                type: 'load-c',
+                size: 18
+              }
+            }),
+            h('div', '正在查询中，请稍候...')
+          ])
+        }
+      })
+    },
     indexData() {
       let indexName = this.$refs.indexView.indexName
       let dataSource = this.$refs.indexView.dataSource
@@ -188,7 +204,7 @@ export default {
     handleSearch() {
       if (this.searchStatements !== '') {
         this.showColumns = true
-        this.$Spin.show()
+        this.loadingShow()
         // if (this.searchStatements.indexOf('limit') === -1) {
         //   let regVal = /\slimit\s(\d+),(\d+)/
         //   if (!regVal.test(this.searchStatements)) {
@@ -220,8 +236,10 @@ export default {
             this.pageTotal = res.data.hits.total
           })
           .catch(err => {
-            this.$Spin.hide()
-            this.$Message.error('查询语句错误')
+            setTimeout(() => {
+              this.$Spin.hide()
+              this.$Message.error('查询语句错误')
+            }, 500)
           })
       } else {
         this.$Message.info('查询语句不能为空')
@@ -240,24 +258,25 @@ export default {
         this.columns = []
         this.columns = this.defaultColumns
         this.showColumns = true
-        this.$Spin.show()
+        this.loadingShow()
         axios({
           methods: 'get',
           url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.handleDealwith(this.activePage)}`
-        }).then(res => {
-           this.$Spin.hide()
-          // 这个地方会出现问题，因为不知道具体的返回结构
-          this.data = res.data.hits.hits.map(item => {
-            return item._source
-          })
-          this.pageTotal = res.data.hits.total
         })
-         .catch(err => {
-           setTimeout(() => {
-                    this.$Spin.hide();
-                }, 1000);
-          //  this.$Spin.hide()
-         })
+          .then(res => {
+            this.$Spin.hide()
+            // 这个地方会出现问题，因为不知道具体的返回结构
+            this.data = res.data.hits.hits.map(item => {
+              return item._source
+            })
+            this.pageTotal = res.data.hits.total
+          })
+          .catch(err => {
+            setTimeout(() => {
+              this.$Spin.hide()
+            }, 500)
+            //  this.$Spin.hide()
+          })
         // this.data = tabComData.data.hits.hits.map(item => {
         //   return item._source
         // })
@@ -366,4 +385,8 @@ export default {
   }
 }
 </style>
-
+<style>
+.demo-spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+</style>
