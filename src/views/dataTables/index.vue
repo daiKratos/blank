@@ -188,6 +188,7 @@ export default {
     handleSearch() {
       if (this.searchStatements !== '') {
         this.showColumns = true
+        this.$Spin.show()
         // if (this.searchStatements.indexOf('limit') === -1) {
         //   let regVal = /\slimit\s(\d+),(\d+)/
         //   if (!regVal.test(this.searchStatements)) {
@@ -196,9 +197,10 @@ export default {
         // }
         axios({
           methods: 'get',
-          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements.replace(/(%25|%)/g,'%25')}`
+          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements.replace(/(%25|%)/g, '%25')}`
         })
           .then(res => {
+            this.$Spin.hide()
             // 这个地方会出现问题，因为不知道具体的返回结构
             this.data = res.data.hits.hits.map(item => {
               return item._source
@@ -218,6 +220,7 @@ export default {
             this.pageTotal = res.data.hits.total
           })
           .catch(err => {
+            this.$Spin.hide()
             this.$Message.error('查询语句错误')
           })
       } else {
@@ -237,16 +240,24 @@ export default {
         this.columns = []
         this.columns = this.defaultColumns
         this.showColumns = true
+        this.$Spin.show()
         axios({
           methods: 'get',
           url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.handleDealwith(this.activePage)}`
         }).then(res => {
+           this.$Spin.hide()
           // 这个地方会出现问题，因为不知道具体的返回结构
           this.data = res.data.hits.hits.map(item => {
             return item._source
           })
           this.pageTotal = res.data.hits.total
         })
+         .catch(err => {
+           setTimeout(() => {
+                    this.$Spin.hide();
+                }, 1000);
+          //  this.$Spin.hide()
+         })
         // this.data = tabComData.data.hits.hits.map(item => {
         //   return item._source
         // })
