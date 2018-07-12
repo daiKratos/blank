@@ -183,10 +183,6 @@ export default {
     },
     handleCriterias(value) {
       const queryParam = value.split('-')
-      // this.queryCriterias = []
-      this.confitions.items[this.focusItem].queryCriteria = ''
-      this.confitions.items[this.focusItem].value = ''
-      this.confitions.items[this.focusItem].copyValue = ''
       if (queryParam.length > 3) {
         this.focusItem = queryParam[1]
         this.confitions.items[this.focusItem].tabName = queryParam[0]
@@ -224,6 +220,10 @@ export default {
           this.confitions.items[this.focusItem].type = ''
         }
       }
+      // this.queryCriterias = []
+      this.confitions.items[this.focusItem].queryCriteria = ''
+      this.confitions.items[this.focusItem].value = ''
+      this.confitions.items[this.focusItem].copyValue = ''
     },
     handleValue(index) {
       const conditionsArr = [' not in ', ' in ']

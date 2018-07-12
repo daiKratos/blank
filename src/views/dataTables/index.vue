@@ -63,6 +63,7 @@ export default {
   },
   data() {
     return {
+      seachType: 1, // 查询类型 1 语句查询  2 条件查询
       showIndexes: false,
       showQuery: false,
       tableData: [],
@@ -213,9 +214,10 @@ export default {
         // }
         axios({
           methods: 'get',
-          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements.replace(/(%25|%)/g, '%25')}`
+          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements.replace(/(%25|%)/g, '%25')} limit ${this.activePage || 0},20`
         })
           .then(res => {
+            this.seachType = 1
             this.$Spin.hide()
             // 这个地方会出现问题，因为不知道具体的返回结构
             this.data = res.data.hits.hits.map(item => {
@@ -254,6 +256,16 @@ export default {
       }
     },
     handleCommit() {
+      let a = 1
+      this.$refs.whereView.confitions.items.map((item, index) => {
+        if (!item.value) {
+          a = 0
+        }
+      })
+      if (!a) {
+        this.$Message.error('查询条件不能为空')
+        return
+      }
       if (this.$refs.tabView.selectConditions !== '') {
         this.columns = []
         this.columns = this.defaultColumns
@@ -264,6 +276,7 @@ export default {
           url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.handleDealwith(this.activePage)}`
         })
           .then(res => {
+            this.seachType = 2
             this.$Spin.hide()
             // 这个地方会出现问题，因为不知道具体的返回结构
             this.data = res.data.hits.hits.map(item => {
@@ -275,7 +288,6 @@ export default {
             setTimeout(() => {
               this.$Spin.hide()
             }, 500)
-            //  this.$Spin.hide()
           })
         // this.data = tabComData.data.hits.hits.map(item => {
         //   return item._source
@@ -286,8 +298,13 @@ export default {
       }
     },
     handlePage(page) {
-      this.activePage = page
-      this.handleCommit()
+      this.activePage = page - 1
+      console.log(this.seachType)
+      if (this.seachType === 1) {
+        this.handleSearch()
+      } else {
+        this.handleCommit()
+      }
     }
   },
   created() {
