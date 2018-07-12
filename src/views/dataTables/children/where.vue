@@ -85,6 +85,10 @@ export default {
       // queryCriterias: [],
       stringCriteria: [
         {
+          value: ' like ',
+          label: '相似'
+        },
+        {
           value: '=',
           label: '等于'
         },

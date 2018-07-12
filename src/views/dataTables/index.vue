@@ -16,7 +16,7 @@
             p.titleName 数据库查询语句：
             Input(type="textarea", placeholder="数据库查询语句", v-model="searchStatements")
           .btn
-            Button(type="primary", @click='handleSearch') 查询
+            Button(type="primary", @click='handleSearch(1)') 查询
       .condition
         h1 条件查询
         .form
@@ -28,14 +28,14 @@
             whereView(:whereData='whereData', :selectedTabName='selectedTabName', :selectField='selectField', ref='whereView')
           .btn
             Button(type="ghost", @click='handleStatement', :disabled='btnDisable') 查看
-            Button(type='primary', @click='handleCommit', :disabled='btnDisable') 查询
+            Button(type='primary', @click='handleCommit(1)', :disabled='btnDisable') 查询
     .card
       .result
         h1 查询结果
         .form
           .select
             Table(:columns="(showColumns?columns:[])", :data="data")
-            Page(:total="pageTotal", :page-size='20', @on-change='handlePage', v-if="data.length!==0" ,show-total)
+            Page(:total="pageTotal", :page-size='20', @on-change='handlePage', v-if="data.length!==0" ,show-total, :current="activePage + 1")
 
     Modal(title="查询语句", v-model="showQuery")
       p(style='word-break: break-all;') {{queryStatements}}
@@ -202,19 +202,24 @@ export default {
         return `select ${this.$refs.tabView.selectConditions} from ${this.$refs.tabView.tableName[0]} where ${this.whereConditions} limit ${page},20`
       }
     },
-    handleSearch() {
+    handleSearch(val) {
       if (this.searchStatements !== '') {
         this.showColumns = true
         this.loadingShow()
-        // if (this.searchStatements.indexOf('limit') === -1) {
-        //   let regVal = /\slimit\s(\d+),(\d+)/
-        //   if (!regVal.test(this.searchStatements)) {
-        //     this.searchStatements = `${this.searchStatements} limit 0,20`
-        //   }
-        // }
+        const oldPage = this.activePage
+        if (val === 1) {
+          this.activePage = 0
+        }
+        let str = this.searchStatements
+        if (this.searchStatements.indexOf('limit') === -1) {
+          let regVal = /\slimit\s(\d+),(\d+)/
+          if (!regVal.test(this.searchStatements)) {
+            str = `${this.searchStatements} limit ${this.activePage || 0},20`
+          }
+        }
         axios({
           methods: 'get',
-          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.searchStatements.replace(/(%25|%)/g, '%25')} limit ${this.activePage || 0},20`
+          url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${str.replace(/(%25|%)/g, '%25')}`
         })
           .then(res => {
             this.seachType = 1
@@ -235,9 +240,14 @@ export default {
               arr.push({ title: item, key: item, width: 150 })
             }
             this.columns = arr
-            this.pageTotal = res.data.hits.total
+            if (res.data.hits.total > 20000) {
+              this.pageTotal = 20000
+            } else {
+              this.pageTotal = res.data.hits.total
+            }
           })
           .catch(err => {
+            this.activePage = oldPage
             setTimeout(() => {
               this.$Spin.hide()
               this.$Message.error('查询语句错误')
@@ -260,6 +270,8 @@ export default {
       this.$refs.whereView.confitions.items.map((item, index) => {
         if (!item.value) {
           a = 0
+        } else {
+          item.value = item.value.replace(/(%25|%)/g, '%25')
         }
       })
       if (!a) {
@@ -271,6 +283,10 @@ export default {
         this.columns = this.defaultColumns
         this.showColumns = true
         this.loadingShow()
+        const oldPage = this.activePage
+        if (val === 1) {
+          this.activePage = 0
+        }
         axios({
           methods: 'get',
           url: `${process.env.searchUrl}:${process.env.searchPort}/_sql?sql=${this.handleDealwith(this.activePage)}`
@@ -285,6 +301,7 @@ export default {
             this.pageTotal = res.data.hits.total
           })
           .catch(err => {
+            this.activePage = oldPage
             setTimeout(() => {
               this.$Spin.hide()
             }, 500)
