@@ -9,7 +9,7 @@
         FormItem(v-for="(item,index) in confitions.items", :key="index")
           Row
             Col(span='6')
-              Select(@on-change='handleCriterias', :disabled='selectField.length===0')
+              Select(@on-change='handleCriterias', :disabled='selectField.length===0' ,model.sync="item.wuqian")
                 OptionGroup(v-if="selectedTabName.length > 1", v-for="(selectedName,nameIndex) in selectedTabName", :label='selectedName', :key='nameIndex')
                   Option(v-for="(optionItem,itemIndex) in whereData[selectedName+'Field']", :value='`${selectedName}-${index}-${optionItem.column_name}-${optionItem.colum_type}`', :key="itemIndex") {{optionItem.column_name}}
                 Option(v-if="selectedTabName.length <= 1", v-for="(radioItem,radioIndex) in whereData", :value='`${index}-${radioItem.column_name}-${radioItem.colum_type}`', :key='radioIndex') {{radioItem.column_name}}
@@ -23,13 +23,11 @@
               //- span(v-if="item.type==='String'") string
               //- span(v-else-if="item.type==='Boolean'") boolean
               //- span(v-else) default
-
-
               //- Select(v-model="item.queryCriterias",   :disabled='selectField.length===0')
                 //- Option(v-for="(query,index) in item.queryCriterias", :value="query.value", :key="index") {{ query.label }}
             Col(span='6', v-if="item.Remaining && item.showValue")
               Input(placeholder="请输入内容", v-model="item.copyValue", @on-blur.stop='handleValue(index)', @on-focus.stop="handleFocus(index)" :disabled='selectField.length===0')
-              .cityModelShow(v-if="cityModelShow")
+              .cityModelShow(v-if="item.cityModelShow")
                 .item(v-for="item in cityLists", :key="item.id", @click="cityModelClick(index,item.name)") {{item.name}}
             Col(span='1')
               Icon(type='ios-trash-outline', @click='handleDelete(index)')
@@ -56,7 +54,6 @@ export default {
     return {
       showType: true,
       character: 'and',
-      cityModelShow: false,
       cityLists: [
         { id: 0, name: '广东省深圳市' },
         { id: 1, name: '上海市' },
@@ -76,7 +73,9 @@ export default {
             Remaining: true,
             showValue: true,
             type: '',
-            queryCriterias: []
+            queryCriterias: [],
+            wuqian: '',
+            cityModelShow: false,
           }
         ]
       },
@@ -150,19 +149,26 @@ export default {
     },
     hasReverseType() {
       return !this.showType ? 'primary' : 'ghost'
-    }
+    },
   },
   mounted() {
     this.$nextTick(() => {
       let _this = this
       document.addEventListener('click', e => {
-        _this.cityModelShow = false
+        _this.confitions.items.map(item => {
+          if (item.cityModelShow) {
+            item.cityModelShow = false;
+          }
+          return item;
+        });
       })
-    })
+    });
   },
   methods: {
     handleDelete(index) {
+      console.log(this.confitions.items[index]);
       this.confitions.items.splice(index, 1)
+      console.log(this.confitions.items, index);
     },
     handleToggle() {
       this.showType = !this.showType
@@ -182,10 +188,13 @@ export default {
         Remaining: false,
         showValue: false,
         type: '',
-        queryCriterias: []
+        queryCriterias: [],
+        cityModelShow: false,
       })
+      console.log(this.confitions.items);
     },
     handleCriterias(value) {
+      console.log(666, value);
       const queryParam = value.split('-')
       if (queryParam.length > 3) {
         this.focusItem = queryParam[1]
@@ -246,13 +255,13 @@ export default {
     handleFocus(index) {
       let field = this.confitions.items[index].field
       if (field === 'city') {
-        this.cityModelShow = true
+        this.$set(this.confitions.items[index], 'cityModelShow', true)
       }
     },
     cityModelClick(index, name) {
       this.confitions.items[index].copyValue = name
       this.confitions.items[index].value = name
-      this.cityModelShow = false
+      this.confitions.items[index].cityModelShow = false
     }
   }
 }

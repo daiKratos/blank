@@ -265,7 +265,7 @@ export default {
         this.queryStatements = '请选择查询的表名、字段名、查询条件'
       }
     },
-    handleCommit() {
+    handleCommit(val) {
       let a = 1
       this.$refs.whereView.confitions.items.map((item, index) => {
         if (!item.value) {
