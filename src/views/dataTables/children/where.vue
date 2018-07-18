@@ -9,7 +9,7 @@
         FormItem(v-for="(item,index) in confitions.items", :key="index")
           Row
             Col(span='6')
-              Select(@on-change='handleCriterias', :disabled='selectField.length===0' ,model.sync="item.wuqian")
+              Select(@on-change='handleCriterias', :disabled='selectField.length===0' ,v-model="item.selectedNameOne")
                 OptionGroup(v-if="selectedTabName.length > 1", v-for="(selectedName,nameIndex) in selectedTabName", :label='selectedName', :key='nameIndex')
                   Option(v-for="(optionItem,itemIndex) in whereData[selectedName+'Field']", :value='`${selectedName}-${index}-${optionItem.column_name}-${optionItem.colum_type}`', :key="itemIndex") {{optionItem.column_name}}
                 Option(v-if="selectedTabName.length <= 1", v-for="(radioItem,radioIndex) in whereData", :value='`${index}-${radioItem.column_name}-${radioItem.colum_type}`', :key='radioIndex') {{radioItem.column_name}}
@@ -74,7 +74,7 @@ export default {
             showValue: true,
             type: '',
             queryCriterias: [],
-            wuqian: '',
+            selectedNameOne: '',
             cityModelShow: false,
           }
         ]
@@ -167,8 +167,32 @@ export default {
   methods: {
     handleDelete(index) {
       console.log(this.confitions.items[index]);
-      this.confitions.items.splice(index, 1)
-      console.log(this.confitions.items, index);
+      const retList = [];
+      const data = this.confitions.items;
+
+      for (let i = 0; i < data.length; i += 1) {
+        const item = data[i];
+        if (i !== index) {
+          let name = '';
+          if (i < index) {
+            name = item.selectedNameOne;
+          } else if (item.selectedNameOne) {
+            const str = item.selectedNameOne.split('-');
+            if (this.selectedTabName.length > 1) {
+              name = `${str[0]}-${i - 1}-${str[2]}-${str[3]}`;
+            } else {
+              name = `${i - 1}-${str[1]}-${str[2]}`;
+            }
+          }
+          retList.push({
+            ...item,
+            selectedNameOne: name,
+          });
+        }
+      }
+
+      this.confitions.items = retList;
+      console.log('index', this.confitions.items);
     },
     handleToggle() {
       this.showType = !this.showType
